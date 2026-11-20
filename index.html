@@ -2,7 +2,15 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16213e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="全聯巡補">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="robots" content="noindex, nofollow">
 <title>PX-A-Wkly-Visit-Rpt｜11/16～11/19</title>
 <style>
@@ -230,6 +238,28 @@ h3.blk{font-size:16px;margin:28px 0 12px;display:flex;align-items:center;gap:8px
 .totop{position:fixed;right:18px;bottom:18px;z-index:40;border:0;width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;font-size:18px;box-shadow:0 8px 20px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.2s}
 .totop.show{opacity:1;pointer-events:auto}
 footer{color:var(--mut);font-size:12px;text-align:center;padding:0 0 30px}
+@media(display-mode:standalone){.hero{padding-top:calc(18px + env(safe-area-inset-top))}}
+/* ===== v2：上方藍色區塊收合／營業所下拉選單／App 版 ===== */
+.hbtn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:6px 14px;font-size:13.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+.hbtn:hover{background:rgba(255,255,255,.16);border-color:var(--gold)}
+.hbtn.first{margin-left:auto}
+.htog .ar{display:inline-block;transition:transform .25s}
+.hero.collapsed .htog .ar{transform:rotate(180deg)}
+.hmini{display:none;color:#c9d2e6;font-size:13px}
+.hmini b{color:#fff}.hmini .w{color:#ffb86b}
+.hero.collapsed .hmini{display:inline}
+.hbody{display:grid;grid-template-rows:1fr;transition:grid-template-rows .28s ease}
+.hbody>.hin{overflow:hidden;min-height:0}
+.hero.collapsed .hbody{grid-template-rows:0fr}
+.hero.collapsed .desc{display:none}
+.hero.collapsed{padding-top:14px}
+.hpad{height:22px;transition:height .28s}
+.hero.collapsed .hpad{height:14px}
+.osel{position:relative;display:inline-flex;align-items:center;flex:1;max-width:360px}
+.osel .dt{position:absolute;left:13px;width:10px;height:10px;border-radius:50%;pointer-events:none}
+.osel select{width:100%;appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" fill="none" stroke="%236b7280" stroke-width="2"/></svg>') no-repeat right 14px center;border-radius:999px;padding:9px 38px 9px 32px;font-size:14.5px;font-family:inherit;color:var(--ink);font-weight:700;cursor:pointer;outline:none}
+.osel select:focus,.osel select:hover{border-color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;line-height:1.6;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:92vw;text-align:center}
 @media(max-width:900px){.two{grid-template-columns:1fr}.kstrip{grid-template-columns:repeat(3,1fr)}.olist{grid-template-columns:1fr}}
 @media(max-width:640px){
   .hero{padding:18px 14px 0}.brand h1{font-size:20px}.logo{width:38px;height:38px;font-size:13px}.brand .desc{padding-left:0;margin-top:0}
@@ -240,18 +270,41 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:0 0 30px}
   .osum{grid-template-columns:1fr;justify-items:center}.leg{width:100%;grid-template-columns:1fr 1fr}
   .pgrid{grid-template-columns:1fr}.rk{grid-template-columns:110px 1fr 36px}
 .mh h3{font-size:19px}.mb{padding:14px}.mnav{position:static;margin-top:10px}
+  .osel{max-width:none;flex:1 1 100%}
+  .fpanel,.frow{min-width:0}
+  .fpanel .pills{flex:1 1 100%;min-width:0;max-width:100%}
+  .seg{max-width:100%}
+  /* App 版：功能分頁改成底部導覽列、詳細頁全螢幕 */
+  .navbar{backdrop-filter:none;-webkit-backdrop-filter:none}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(22,33,62,.98);box-shadow:0 -4px 18px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom);gap:0}
+  .tab{border-bottom:0;border-top:3px solid transparent;padding:8px 4px 7px}
+  .tab.on{border-top-color:var(--gold);color:var(--gold2)}
+  .dates{padding:8px 0}
+  main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+  footer{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  .totop{bottom:calc(80px + env(safe-area-inset-bottom));right:14px;width:42px;height:42px}
+  .modal{padding:0}
+  .mbox{border-radius:0;min-height:100%;max-width:none}
+  .mh{padding:calc(16px + env(safe-area-inset-top)) 16px 16px}
+  .mclose{top:calc(12px + env(safe-area-inset-top));width:40px;height:40px}
+  .hbtn{padding:5px 11px;font-size:12.5px}
+  .hbtn .tl{display:none}
+  .hmini{width:100%;order:9;font-size:12.5px}
   .frow .lb{width:100%}.search{max-width:none;flex:1 1 100%}.fpanel .pills{flex-wrap:nowrap;overflow-x:auto;padding-bottom:3px}.cgrid{grid-template-columns:1fr 1fr;gap:8px}.cs{padding:8px}.tg{grid-template-columns:1fr 1fr;gap:5px}.seg{margin-left:0}
 }
 </style>
 </head>
 <body>
-<section class="hero">
+<section class="hero" id="hero">
   <div class="wrap">
     <div class="brand"><div class="logo">PX</div><h1>PX-A-Wkly-Visit-Rpt</h1><span class="range">11/16～11/19</span>
+      <span class="hmini" id="hmini"></span>
+      <button class="hbtn first" id="installBtn" hidden onclick="doInstall()">📲 <span class="tl">安裝 App</span></button>
+      <button class="hbtn htog" id="heroTog" onclick="toggleHero()" aria-expanded="true"><span class="tl" id="heroTogTx">收合</span><span class="ar">▴</span></button>
       <div class="desc">全聯 A 級點門市巡補回報｜照片・巡補人員・缺貨通知・總表</div></div>
-    <div class="kstrip" id="kstrip"></div>
+    <div class="hbody"><div class="hin"><div class="kstrip" id="kstrip"></div></div></div>
   </div>
-  <div style="height:22px"></div>
+  <div class="hpad"></div>
 </section>
 <div class="navbar"><div class="navin"><nav class="tabs" id="tabs"></nav><div class="dates" id="dates"></div></div></div>
 <main id="main"></main>
@@ -287,6 +340,7 @@ function render(){
   document.getElementById('kstrip').innerHTML=[
     ['🏪','巡補門市',P.reduce((a,p)=>a+p.stores.length,0),'家'],['📷','陳列照片',V.reduce((a,v)=>a+v.photos.length,0),'張'],
     ['👥','巡補人員',staffN,'人'],['📝','缺貨／備註',O.length,'筆'],['⚠️','需追蹤',tr,'筆',1]].map(([i,l,v,u,w])=>`<div class="ks ${w&&v?'warn':''}"><div class="l">${i} ${l}</div><div class="v">${v}<small>${u}</small></div></div>`).join('');
+  document.getElementById('hmini').innerHTML=`🏪 <b>${P.reduce((a,p)=>a+p.stores.length,0)}</b> 家・📷 <b>${V.reduce((a,v)=>a+v.photos.length,0)}</b> 張・👥 <b>${staffN}</b> 人・📝 <b>${O.length}</b> 筆${tr?`・<span class="w">⚠️ 需追蹤 <b>${tr}</b></span>`:''}`;
   const T=[['photo','📷','照片'],['staff','👥','巡補人員'],['oos','⚠️','缺貨通知',tr],['sum','📊','總表']];
   document.getElementById('tabs').innerHTML=T.map(([k,i,l,b])=>`<button class="tab ${S.tab===k?'on':''}" onclick="go('${k}')"><span class="ic">${i}</span><span class="tx">${l}</span>${b?`<span class="badge">${b}</span>`:''}</button>`).join('');
   document.getElementById('dates').innerHTML=[['all','整週'],...DATES.map(d=>[d,md(d)])].map(([k,l])=>`<button class="chip ${S.date===k?'on':''}" onclick="S.date='${k}';render()">${l}${k!=='all'?`<span class="wd">(${wd(k)})</span>`:''}</button>`).join('');
@@ -302,12 +356,20 @@ function officePills(key){
   return `<button class="pill ${S[key]==='all'?'on':''}" onclick="S.${key}='all';render()">全部營業所 <span class="n">${base.length}</span></button>`+
    OFFICES.filter(o=>cnt[o]).map(o=>`<button class="pill ${S[key]===o?'on':''}" onclick="S.${key}='${o}';render()"><span class="dt" style="background:${OC[o]}"></span>${o.replace('營業所','')} <span class="n">${cnt[o]}</span></button>`).join('');
 }
+// 營業所下拉選單（取代原本一排按鈕）
+function officeSelect(key){
+  const base=D.visits.filter(v=>inD(v.date));const cnt={};base.forEach(v=>cnt[v.office]=(cnt[v.office]||0)+1);
+  const cur=S[key];
+  return `<div class="osel"><span class="dt" style="background:${cur==='all'?'#c3c9d6':OC[cur]}"></span><select aria-label="營業所" onchange="S.${key}=this.value;render()">
+    <option value="all"${cur==='all'?' selected':''}>全部營業所（${base.length} 家）</option>
+    ${OFFICES.filter(o=>cnt[o]).map(o=>`<option value="${esc(o)}"${cur===o?' selected':''}>${esc(o)}（${cnt[o]} 家）</option>`).join('')}</select></div>`;
+}
 function vPhoto(){
   if(S.office!=='all'&&!D.visits.some(v=>inD(v.date)&&v.office===S.office))S.office='all';
   const V=pv();const ph=V.flatMap(v=>v.photos.filter(p=>S.cat==='all'||p.cat===S.cat).map(p=>({...p,v})));
   let h=`<div class="sec-h"><h2><span class="bar"></span>門市陳列照片</h2><span class="sub">${V.length} 家門市・${ph.length} 張照片　點選卡片看完整照片</span></div>
   <div class="fpanel">
-    <div class="frow"><span class="lb">營業所</span><div class="pills">${officePills('office')}</div></div>
+    <div class="frow"><span class="lb">營業所</span>${officeSelect('office')}</div>
     <div class="frow"><span class="lb">陳列</span><div class="pills"><button class="pill ${S.cat==='all'?'on':''}" onclick="S.cat='all';render()">全部</button>${CATS.map(([c,i])=>`<button class="pill ${S.cat===c?'on':''}" onclick="S.cat='${c}';render()">${i} ${c.replace('陳列','')}</button>`).join('')}</div></div>
     <div class="frow"><span class="lb">搜尋</span><div class="search"><input id="q" placeholder="門市、人員或備註關鍵字" value="${esc(S.q)}"></div>
       <div class="seg"><button class="${S.view==='card'?'on':''}" onclick="S.view='card';render()">🏪 門市卡片</button><button class="${S.view==='wall'?'on':''}" onclick="S.view='wall';render()">🖼 照片牆</button></div></div>
@@ -328,6 +390,7 @@ function vPhoto(){
 }
 /* ---------- staff ---------- */
 function vStaff(){
+  if(S.sOffice!=='all'&&!D.plan.some(p=>inD(p.date)&&p.office===S.sOffice))S.sOffice='all';
   const P=D.plan.filter(p=>inD(p.date)&&(S.sOffice==='all'||p.office===S.sOffice));
   const M={};
   P.forEach(p=>p.staff.forEach(s=>{const k=s;const o=(M[k]??={name:s,office:p.office,days:{},stores:0,photos:0});
@@ -335,7 +398,7 @@ function vStaff(){
   const L=Object.values(M).sort((a,b)=>OFFICES.indexOf(a.office)-OFFICES.indexOf(b.office)||b.stores-a.stores);
   const R=[...L].sort((a,b)=>b.stores-a.stores);const mx=R[0]?.stores||1;
   let h=`<div class="sec-h"><h2><span class="bar"></span>巡補人員</h2><span class="sub">${L.length} 位人員・點選門市可查看照片</span></div>
-  <div class="fpanel"><div class="frow"><span class="lb">營業所</span><div class="pills">${officePills('sOffice')}</div></div></div>`;
+  <div class="fpanel"><div class="frow"><span class="lb">營業所</span>${officeSelect('sOffice')}</div></div>`;
   if(!L.length)return h+`<div class="empty">沒有資料</div>`;
   h+=`<div class="rank"><h4 style="margin:0 0 10px;font-size:15px">🏆 巡補門市數排行</h4>${R.slice(0,12).map(p=>`<div class="rk" onclick="jump('${esc(p.name)}')"><div class="rn">${esc(nm(p.name))}<small>${p.office.replace('營業所','')}</small></div><div class="rkb"><i style="width:${p.stores/mx*100}%;background:${OC[p.office]}"></i></div><div class="rv">${p.stores}</div></div>`).join('')}</div>`;
   h+=`<div class="pgrid">${L.map(p=>`<div class="pcard" id="p-${esc(p.name)}" style="--c:${OC[p.office]}"><div class="ph"><div class="av">${esc(nm(p.name)[0])}</div><div><div class="nm">${esc(nm(p.name))}<small>${sid(p.name)}</small></div><div class="of">${p.office}</div></div></div>
@@ -460,6 +523,22 @@ let tx=0;const lbe=document.getElementById('lb');lbe.addEventListener('touchstar
 lbe.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)stepLB(dx<0?1:-1)});
 document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;clearTimeout(window._t);window._t=setTimeout(()=>{render();const q=document.getElementById('q');if(q){q.focus();q.setSelectionRange(q.value.length,q.value.length)}},350)}});
 addEventListener('scroll',()=>document.getElementById('totop').classList.toggle('show',scrollY>600),{passive:true});
+/* ---------- 上方藍色區塊：展開／收合（記住上次的選擇；手機預設收合） ---------- */
+function setHero(c){const h=document.getElementById('hero');h.classList.toggle('collapsed',c);
+  const b=document.getElementById('heroTog');b.setAttribute('aria-expanded',String(!c));b.title=c?'展開':'收合';document.getElementById('heroTogTx').textContent=c?'展開':'收合'}
+function toggleHero(){const c=!document.getElementById('hero').classList.contains('collapsed');setHero(c);try{localStorage.setItem('pxHeroCollapsed',c?'1':'0')}catch(_){}}
+(()=>{let v=null;try{v=localStorage.getItem('pxHeroCollapsed')}catch(_){}setHero(v===null?matchMedia('(max-width:640px)').matches:v==='1')})();
+/* ---------- 安裝成 App（Android／電腦 Chrome 直接安裝；iPhone 提示加入主畫面） ---------- */
+let instEvt=null;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent),isStandalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEvt=e;document.getElementById('installBtn').hidden=false});
+addEventListener('appinstalled',()=>{document.getElementById('installBtn').hidden=true});
+if(isIOS&&!isStandalone)document.getElementById('installBtn').hidden=false;
+function toast(t){const o=document.createElement('div');o.className='toast';o.innerHTML=t;document.body.appendChild(o);setTimeout(()=>o.remove(),6000);o.onclick=()=>o.remove()}
+function doInstall(){
+  if(instEvt){instEvt.prompt();instEvt.userChoice.finally(()=>{instEvt=null;document.getElementById('installBtn').hidden=true});return}
+  if(isIOS)toast('用 Safari 開啟此頁 → 點下方 <b>分享</b> 按鈕 <b>⬆︎</b><br>→ 選「<b>加入主畫面</b>」，就會像 App 一樣出現在桌面');
+}
 render();
 </script>
 </body>
