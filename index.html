@@ -259,6 +259,14 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:0 0 30px}
 .osel .dt{position:absolute;left:13px;width:10px;height:10px;border-radius:50%;pointer-events:none}
 .osel select{width:100%;appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" fill="none" stroke="%236b7280" stroke-width="2"/></svg>') no-repeat right 14px center;border-radius:999px;padding:9px 38px 9px 32px;font-size:14.5px;font-family:inherit;color:var(--ink);font-weight:700;cursor:pointer;outline:none}
 .osel select:focus,.osel select:hover{border-color:var(--gold)}
+.fhead{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;margin:-2px 0}
+.fhead .ft{font-weight:800;font-size:14px;white-space:nowrap}
+.fhead .fs{color:var(--mut);font-size:13px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fhead .fs b{color:var(--ink)}
+.fhead .fbtn{border:1px solid var(--line);background:#faf9f6;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;flex:none}
+.fhead .fbtn:hover{border-color:var(--gold)}
+.fpanel.fclosed .frow{display:none}
+.fpanel.fclosed{padding:12px 16px}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;line-height:1.6;z-index:90;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:92vw;text-align:center}
 @media(max-width:900px){.two{grid-template-columns:1fr}.kstrip{grid-template-columns:repeat(3,1fr)}.olist{grid-template-columns:1fr}}
 @media(max-width:640px){
@@ -274,15 +282,11 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:0 0 30px}
   .fpanel,.frow{min-width:0}
   .fpanel .pills{flex:1 1 100%;min-width:0;max-width:100%}
   .seg{max-width:100%}
-  /* App 版：功能分頁改成底部導覽列、詳細頁全螢幕 */
-  .navbar{backdrop-filter:none;-webkit-backdrop-filter:none}
-  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:45;background:rgba(22,33,62,.98);box-shadow:0 -4px 18px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom);gap:0}
-  .tab{border-bottom:0;border-top:3px solid transparent;padding:8px 4px 7px}
-  .tab.on{border-top-color:var(--gold);color:var(--gold2)}
-  .dates{padding:8px 0}
-  main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
-  footer{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
-  .totop{bottom:calc(80px + env(safe-area-inset-bottom));right:14px;width:42px;height:42px}
+  /* App 版：上方固定一列「照片／巡補人員／缺貨通知／總表」，下面一列日期；詳細頁全螢幕 */
+  .tabs{order:1;width:100%;gap:0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .tab.on{color:var(--gold2)}
+  .dates{order:2;padding:8px 0}
+  .totop{bottom:calc(18px + env(safe-area-inset-bottom));right:14px;width:42px;height:42px}
   .modal{padding:0}
   .mbox{border-radius:0;min-height:100%;max-width:none}
   .mh{padding:calc(16px + env(safe-area-inset-top)) 16px 16px}
@@ -325,6 +329,7 @@ const md=d=>{const [,m,dd]=d.split('-');return `${+m}/${+dd}`};
 const wd=d=>WD[new Date(d+'T00:00:00').getDay()];
 const nm=s=>s.replace(/-\d+$/,'');const sid=s=>(s.match(/-(\d+)$/)||[])[1]||'';
 const DATES=[...new Set(D.plan.map(p=>p.date))].sort();
+{let v=null;try{v=localStorage.getItem('pxFilterOpen')}catch(_){}S.fOpen=v===null?!matchMedia('(max-width:640px)').matches:v==='1'}
 /*v206-latest*/if(DATES.length>1&&!location.hash)S.date=DATES[DATES.length-1];
 const OFFICES=[...new Set(D.plan.map(p=>p.office))];
 const OC={};OFFICES.forEach((o,i)=>OC[o]=PAL[i%PAL.length]);
@@ -356,6 +361,13 @@ function officePills(key){
   return `<button class="pill ${S[key]==='all'?'on':''}" onclick="S.${key}='all';render()">全部營業所 <span class="n">${base.length}</span></button>`+
    OFFICES.filter(o=>cnt[o]).map(o=>`<button class="pill ${S[key]===o?'on':''}" onclick="S.${key}='${o}';render()"><span class="dt" style="background:${OC[o]}"></span>${o.replace('營業所','')} <span class="n">${cnt[o]}</span></button>`).join('');
 }
+// 篩選區塊收合時顯示目前條件；狀態記在瀏覽器（手機預設收合）
+function filterSummary(){
+  const a=[`<b>${S.office==='all'?'全部營業所':esc(S.office)}</b>`,`<b>${S.cat==='all'?'全部陳列':esc(S.cat.replace('陳列',''))}</b>`];
+  if(S.q.trim())a.push(`搜尋「<b>${esc(S.q.trim())}</b>」`);
+  return a.join('・');
+}
+function toggleFilter(){S.fOpen=!S.fOpen;try{localStorage.setItem('pxFilterOpen',S.fOpen?'1':'0')}catch(_){}render()}
 // 營業所下拉選單（取代原本一排按鈕）
 function officeSelect(key){
   const base=D.visits.filter(v=>inD(v.date));const cnt={};base.forEach(v=>cnt[v.office]=(cnt[v.office]||0)+1);
@@ -368,7 +380,8 @@ function vPhoto(){
   if(S.office!=='all'&&!D.visits.some(v=>inD(v.date)&&v.office===S.office))S.office='all';
   const V=pv();const ph=V.flatMap(v=>v.photos.filter(p=>S.cat==='all'||p.cat===S.cat).map(p=>({...p,v})));
   let h=`<div class="sec-h"><h2><span class="bar"></span>門市陳列照片</h2><span class="sub">${V.length} 家門市・${ph.length} 張照片　點選卡片看完整照片</span></div>
-  <div class="fpanel">
+  <div class="fpanel ${S.fOpen?'':'fclosed'}">
+    <div class="fhead" onclick="toggleFilter()"><span class="ft">🔎 篩選</span><span class="fs">${filterSummary()}</span><button class="fbtn" type="button">${S.fOpen?'收合 ▴':'展開 ▾'}</button></div>
     <div class="frow"><span class="lb">營業所</span>${officeSelect('office')}</div>
     <div class="frow"><span class="lb">陳列</span><div class="pills"><button class="pill ${S.cat==='all'?'on':''}" onclick="S.cat='all';render()">全部</button>${CATS.map(([c,i])=>`<button class="pill ${S.cat===c?'on':''}" onclick="S.cat='${c}';render()">${i} ${c.replace('陳列','')}</button>`).join('')}</div></div>
     <div class="frow"><span class="lb">搜尋</span><div class="search"><input id="q" placeholder="門市、人員或備註關鍵字" value="${esc(S.q)}"></div>
@@ -400,7 +413,6 @@ function vStaff(){
   let h=`<div class="sec-h"><h2><span class="bar"></span>巡補人員</h2><span class="sub">${L.length} 位人員・點選門市可查看照片</span></div>
   <div class="fpanel"><div class="frow"><span class="lb">營業所</span>${officeSelect('sOffice')}</div></div>`;
   if(!L.length)return h+`<div class="empty">沒有資料</div>`;
-  h+=`<div class="rank"><h4 style="margin:0 0 10px;font-size:15px">🏆 巡補門市數排行</h4>${R.slice(0,12).map(p=>`<div class="rk" onclick="jump('${esc(p.name)}')"><div class="rn">${esc(nm(p.name))}<small>${p.office.replace('營業所','')}</small></div><div class="rkb"><i style="width:${p.stores/mx*100}%;background:${OC[p.office]}"></i></div><div class="rv">${p.stores}</div></div>`).join('')}</div>`;
   h+=`<div class="pgrid">${L.map(p=>`<div class="pcard" id="p-${esc(p.name)}" style="--c:${OC[p.office]}"><div class="ph"><div class="av">${esc(nm(p.name)[0])}</div><div><div class="nm">${esc(nm(p.name))}<small>${sid(p.name)}</small></div><div class="of">${p.office}</div></div></div>
     <div class="pst"><div><b>${p.stores}</b><span>巡補門市</span></div><div><b>${Object.keys(p.days).length}</b><span>出勤天數</span></div><div><b>${p.photos}</b><span>上傳照片</span></div></div>
     ${Object.entries(p.days).sort().map(([d,ss])=>`<div class="day"><div class="dl">${md(d)}<br><span style="font-weight:500;color:var(--mut)">(${wd(d)})</span></div><div class="sl">${ss.map(s=>{const v=VMAP[d+'|'+s];const oo=OOS[d+'|'+s];
